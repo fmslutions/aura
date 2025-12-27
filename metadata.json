@@ -1,0 +1,9 @@
+{
+  "name": "Aura - Global Beauty SaaS Platform",
+  "description": "A high-performance, multi-tenant SaaS for beauty salons featuring autonomous onboarding, AI-driven scheduling, PWA functionality, and advanced SEO.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
