@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../src/lib/supabase';
-import { useAuth } from '../../src/hooks/useAuth';
+import { supabase } from '../src/lib/supabase';
+import { useAuth } from '../src/hooks/useAuth';
 
 export const ProfilePage: React.FC = () => {
     const { user } = useAuth();
