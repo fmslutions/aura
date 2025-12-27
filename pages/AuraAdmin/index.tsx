@@ -5,6 +5,7 @@ import { Salons } from './Salons';
 import { Users } from './Users';
 import { Settings } from './Settings';
 import { Reports } from './Reports';
+import { Marketing } from './Marketing';
 
 interface AuraAdminProps {
     onSwitchTenant: (tenantId: string | null) => void;
@@ -25,6 +26,8 @@ export const AuraAdmin: React.FC<AuraAdminProps> = ({ onSwitchTenant, activeTena
                 return <Users />;
             case 'reports':
                 return <Reports />;
+            case 'marketing':
+                return <Marketing />;
             case 'settings':
                 return <Settings />;
             default:
