@@ -2,10 +2,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AppView, Tenant, Service, Staff } from './types';
 import { Navigation } from './components/Navigation';
-import { Dashboard } from './pages/Dashboard';
+import { Dashboard } from './Dashboard';
 import { GeminiService } from './services/geminiService';
 import { useAuth } from './src/hooks/useAuth';
 import { supabase } from './src/lib/supabase';
+
+// ... (existing constants MOCK_TENANT, MOCK_SERVICES, MOCK_STAFF, MOCK_TIMES, translations ...)
 
 const MOCK_TENANT: Tenant = {
   id: '1',
@@ -448,6 +450,32 @@ const LazyServiceCard: React.FC<{ service: Service, t: Record<string, string>, o
 const App: React.FC = () => {
   const { user, tenant, loading: authLoading } = useAuth();
   const [view, setView] = useState<AppView>(AppView.INSTITUTIONAL);
+
+  // PWA State
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstall, setShowInstall] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstall(true);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+      setShowInstall(false);
+    }
+  };
+
+
 
   // Update view based on auth state
   useEffect(() => {
@@ -1184,7 +1212,20 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {view === AppView.INSTITUTIONAL && renderInstitutional()}
+      {view === AppView.INSTITUTIONAL && (
+        <>
+          {renderInstitutional()}
+          {showInstall && (
+            <button
+              onClick={handleInstallClick}
+              className="fixed bottom-6 left-6 z-50 bg-indigo-600 text-white px-6 py-3 rounded-full shadow-2xl font-bold flex items-center space-x-2 hover:scale-105 active:scale-95 transition-all text-sm animate-in fade-in slide-in-from-bottom-4"
+            >
+              <i className="fas fa-download"></i>
+              <span>Install App</span>
+            </button>
+          )}
+        </>
+      )}
       {view === AppView.AUTH && renderAuth()}
       {view === AppView.DASHBOARD && (
         <Dashboard
@@ -1193,6 +1234,8 @@ const App: React.FC = () => {
           auraLogo={auraLogo}
           handleGenerateLogo={handleGenerateLogo}
           isGeneratingLogo={isGeneratingLogo}
+          showInstall={showInstall}
+          onInstall={handleInstallClick}
         />
       )}
       {view === AppView.PWA && renderPWA()}

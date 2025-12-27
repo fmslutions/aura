@@ -16,6 +16,8 @@ interface DashboardProps {
     auraLogo: string | null;
     handleGenerateLogo: () => void;
     isGeneratingLogo: boolean;
+    showInstall?: boolean;
+    onInstall?: () => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -23,7 +25,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
     activeTenant,
     auraLogo,
     handleGenerateLogo,
-    isGeneratingLogo
+    isGeneratingLogo,
+    showInstall,
+    onInstall
 }) => {
     const [activeTab, setActiveTab] = useState('home');
 
@@ -67,6 +71,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
             logoUrl={auraLogo}
             activeTab={activeTab}
             onTabChange={setActiveTab}
+            showInstall={showInstall}
+            onInstall={onInstall}
         >
             {renderContent()}
         </DashboardLayout>

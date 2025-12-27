@@ -9,9 +9,20 @@ interface DashboardLayoutProps {
   logoUrl?: string | null;
   activeTab: string;
   onTabChange: (tab: string) => void;
+  showInstall?: boolean;
+  onInstall?: () => void;
 }
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, setView, activeTenant, logoUrl, activeTab, onTabChange }) => {
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
+  children,
+  setView,
+  activeTenant,
+  logoUrl,
+  activeTab,
+  onTabChange,
+  showInstall,
+  onInstall
+}) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   const menuItems = [
@@ -61,7 +72,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, setV
           ))}
         </nav>
 
-        <div className="p-4 border-t border-slate-100">
+        <div className="p-4 border-t border-slate-100 space-y-2">
+          {showInstall && (
+            <button
+              onClick={onInstall}
+              className="w-full bg-indigo-600 text-white p-3 rounded-xl flex items-center justify-center space-x-2 hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+            >
+              <i className="fas fa-download text-xs"></i>
+              {isSidebarOpen && <span className="text-xs font-bold uppercase tracking-wider">Install App</span>}
+            </button>
+          )}
           <button
             onClick={() => setView(AppView.PWA)}
             className="w-full bg-slate-900 text-white p-3 rounded-xl flex items-center justify-center space-x-2 hover:bg-slate-800 transition-colors"
