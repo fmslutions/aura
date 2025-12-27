@@ -1241,6 +1241,10 @@ const App: React.FC = () => {
           isGeneratingLogo={isGeneratingLogo}
           showInstall={showInstall}
           onInstall={handleInstallClick}
+          isSuperAdmin={isSuperAdmin}
+          onSwitchToAdmin={() => switchTenant(null)}
+          user={user}
+          onLogout={() => supabase.auth.signOut()}
         />
       )}
       {view === AppView.PWA && renderPWA()}

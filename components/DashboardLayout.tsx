@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { AppView, Tenant } from '../types';
+import { User } from '@supabase/supabase-js';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,10 @@ interface DashboardLayoutProps {
   onTabChange: (tab: string) => void;
   showInstall?: boolean;
   onInstall?: () => void;
+  isSuperAdmin?: boolean;
+  onSwitchToAdmin?: () => void;
+  user?: User | null;
+  onLogout?: () => void;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -21,9 +26,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   activeTab,
   onTabChange,
   showInstall,
-  onInstall
+  onInstall,
+  isSuperAdmin,
+  onSwitchToAdmin,
+  user,
+  onLogout
 }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isProfileOpen, setProfileOpen] = useState(false);
 
   const menuItems = [
     { id: 'home', icon: 'fa-chart-pie', label: 'Dashboard' },
@@ -50,7 +60,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   <i className="fas fa-sparkles text-sm"></i>
                 </div>
               )}
-              <span className="font-bold text-slate-800">Aura Admin</span>
+              <span className="font-bold text-slate-800 truncate">{activeTenant.name || 'Aura Admin'}</span>
             </div>
           )}
           <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="text-slate-400 hover:text-slate-600 ml-auto">
@@ -59,6 +69,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         </div>
 
         <nav className="flex-1 px-4 space-y-1">
+          {isSuperAdmin && (
+            <button
+              onClick={onSwitchToAdmin}
+              className={`w-full flex items-center ${isSidebarOpen ? 'px-4' : 'justify-center'} py-3 rounded-xl transition-all mb-4 bg-slate-900 text-white hover:bg-slate-800 shadow-md`}
+            >
+              <i className="fas fa-arrow-left w-5"></i>
+              {isSidebarOpen && <span className="ml-3 font-bold text-sm">Back to Aura Admin</span>}
+            </button>
+          )}
+
           {menuItems.map((item) => (
             <button
               key={item.id}
@@ -98,18 +118,57 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <div className="flex items-center space-x-4">
             <h2 className="text-xl font-bold text-slate-800 capitalize">{activeTenant.name}</h2>
             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 uppercase">Pro Plan</span>
+            {isSuperAdmin && (
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-700 uppercase border border-indigo-200">
+                Masquerading
+              </span>
+            )}
           </div>
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-3 text-slate-500">
-              <i className="far fa-bell text-lg cursor-pointer"></i>
-              <i className="far fa-envelope text-lg cursor-pointer"></i>
+              <i className="far fa-bell text-lg cursor-pointer hover:text-indigo-600 transition-colors"></i>
+              <i className="far fa-envelope text-lg cursor-pointer hover:text-indigo-600 transition-colors"></i>
             </div>
-            <div className="flex items-center space-x-3 cursor-pointer">
-              <img src="https://picsum.photos/32/32" className="w-8 h-8 rounded-full border border-slate-200" alt="Avatar" />
-              <div className="hidden sm:block text-left">
-                <p className="text-sm font-semibold text-slate-800">Owner Name</p>
-                <p className="text-xs text-slate-500">Admin</p>
-              </div>
+
+            <div className="relative">
+              <button
+                onClick={() => setProfileOpen(!isProfileOpen)}
+                className="flex items-center space-x-3 cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-all"
+              >
+                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                  {user?.email?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <div className="hidden sm:block text-left">
+                  <p className="text-sm font-semibold text-slate-800 max-w-[100px] truncate">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}</p>
+                  <p className="text-xs text-slate-500">{isSuperAdmin ? 'Super Admin' : 'Admin'}</p>
+                </div>
+                <i className="fas fa-chevron-down text-xs text-slate-400"></i>
+              </button>
+
+              {isProfileOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50 animate-in fade-in slide-in-from-top-2">
+                  <div className="px-4 py-3 border-b border-slate-50">
+                    <p className="text-xs text-slate-500 uppercase tracking-wider font-bold">Signed in as</p>
+                    <p className="text-sm font-bold text-slate-900 truncate">{user?.email}</p>
+                  </div>
+                  <button
+                    onClick={() => { setProfileOpen(false); onTabChange('profile'); }}
+                    className="w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors"
+                  >
+                    <i className="fas fa-user-circle mr-2"></i> Profile
+                  </button>
+                  <button className="w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <i className="fas fa-cog mr-2"></i> Settings
+                  </button>
+                  <div className="border-t border-slate-50 my-1"></div>
+                  <button
+                    onClick={onLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <i className="fas fa-sign-out-alt mr-2"></i> Sign Out
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </header>

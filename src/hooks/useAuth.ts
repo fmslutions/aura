@@ -54,14 +54,24 @@ export function useAuth() {
                 setIsSuperAdmin(superAdmin);
 
                 // If super admin, check if there is an overridden tenant in localStorage
-                // Otherwise use the profile tenant
+                // Otherwise use the profile tenant ONLY if not super admin (or if we want default behavior)
+                // user wants to see Aura Admin by default.
                 const overriddenTenantId = superAdmin ? localStorage.getItem('aura_super_admin_tenant_id') : null;
-                const targetTenantId = overriddenTenantId || profile.tenant_id;
+
+                // If Super Admin has NO override, they should see NO tenant (Global View)
+                // If Super Admin HAS override, they see that tenant.
+                // If Normal User, they see their profile.tenant_id.
+
+                let targetTenantId = null;
+                if (superAdmin) {
+                    targetTenantId = overriddenTenantId;
+                } else {
+                    targetTenantId = profile.tenant_id;
+                }
 
                 if (targetTenantId) {
                     await fetchTenant(targetTenantId);
-                } else if (!superAdmin) {
-                    // Normal user with no tenant (rare)
+                } else {
                     setTenant(null);
                 }
             }

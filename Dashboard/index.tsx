@@ -9,6 +9,8 @@ import { ServicesPage } from './Services';
 import { Growth } from './Growth';
 import { Payments } from './Payments';
 import { Settings } from './Settings';
+import { ProfilePage } from './Profile';
+import { User } from '@supabase/supabase-js';
 
 interface DashboardProps {
     setView: (view: AppView) => void;
@@ -18,6 +20,10 @@ interface DashboardProps {
     isGeneratingLogo: boolean;
     showInstall?: boolean;
     onInstall?: () => void;
+    isSuperAdmin?: boolean;
+    onSwitchToAdmin?: () => void;
+    user?: User | null;
+    onLogout?: () => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -27,7 +33,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
     handleGenerateLogo,
     isGeneratingLogo,
     showInstall,
-    onInstall
+    onInstall,
+    isSuperAdmin,
+    onSwitchToAdmin,
+    user,
+    onLogout
 }) => {
     const [activeTab, setActiveTab] = useState('home');
 
@@ -54,6 +64,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 return <Payments />;
             case 'settings':
                 return <Settings />;
+            case 'profile':
+                return <ProfilePage />;
             default:
                 return <Home
                     activeTenant={activeTenant}
@@ -73,6 +85,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
             onTabChange={setActiveTab}
             showInstall={showInstall}
             onInstall={onInstall}
+            isSuperAdmin={isSuperAdmin}
+            onSwitchToAdmin={onSwitchToAdmin}
+            user={user}
+            onLogout={onLogout}
         >
             {renderContent()}
         </DashboardLayout>
