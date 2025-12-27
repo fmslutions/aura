@@ -4,53 +4,53 @@ export const Settings: React.FC = () => {
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div>
-                <h1 className="text-2xl font-black text-white tracking-tight">System Settings</h1>
-                <p className="text-slate-400 mt-1">Configure global platform parameters and defaults.</p>
+                <h1 className="text-2xl font-black text-slate-800 tracking-tight">Configurações do Sistema</h1>
+                <p className="text-slate-500 mt-1">Configure parâmetros globais e padrões da plataforma.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <section className="bg-slate-900/50 border border-white/5 p-8 rounded-2xl">
-                    <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                        <i className="fas fa-globe text-indigo-400"></i> Platform Defaults
+                <section className="bg-white border border-slate-100 p-8 rounded-2xl shadow-sm">
+                    <h2 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i className="fas fa-globe text-indigo-600"></i> Padrões da Plataforma
                     </h2>
                     <div className="space-y-6">
                         <div>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Default Currency</label>
-                            <select className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Moeda Padrão</label>
+                            <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
                                 <option>EUR (€)</option>
                                 <option>USD ($)</option>
-                                <option>GBP (£)</option>
+                                <option>BRL (R$)</option>
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">System Language</label>
-                            <select className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors">
+                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Idioma do Sistema</label>
+                            <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                                <option>Português (Brasil)</option>
                                 <option>English (UK)</option>
                                 <option>Italiano</option>
-                                <option>Deutsch</option>
                             </select>
                         </div>
                     </div>
                 </section>
 
-                <section className="bg-slate-900/50 border border-white/5 p-8 rounded-2xl">
-                    <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                        <i className="fas fa-shield-alt text-indigo-400"></i> Security & Access
+                <section className="bg-white border border-slate-100 p-8 rounded-2xl shadow-sm">
+                    <h2 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i className="fas fa-shield-alt text-indigo-600"></i> Segurança e Acesso
                     </h2>
                     <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 bg-slate-950 rounded-xl border border-white/5">
+                        <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                             <div>
-                                <h3 className="text-sm font-bold text-white">Maintenance Mode</h3>
-                                <p className="text-xs text-slate-500">Disable access for all non-admin users.</p>
+                                <h3 className="text-sm font-bold text-slate-800">Modo Manutenção</h3>
+                                <p className="text-xs text-slate-500">Desativar acesso para usuários não administradores.</p>
                             </div>
-                            <button className="w-12 h-6 bg-slate-800 rounded-full relative transition-colors hover:bg-slate-700">
-                                <div className="absolute left-1 top-1 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+                            <button className="w-12 h-6 bg-slate-200 rounded-full relative transition-colors hover:bg-slate-300">
+                                <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all shadow-sm"></div>
                             </button>
                         </div>
-                        <div className="flex items-center justify-between p-4 bg-slate-950 rounded-xl border border-white/5">
+                        <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
                             <div>
-                                <h3 className="text-sm font-bold text-white">New Registrations</h3>
-                                <p className="text-xs text-slate-500">Allow new salons to sign up.</p>
+                                <h3 className="text-sm font-bold text-slate-800">Novos Cadastros</h3>
+                                <p className="text-xs text-slate-500">Permitir que novos salões se cadastrem.</p>
                             </div>
                             <button className="w-12 h-6 bg-indigo-600 rounded-full relative transition-colors">
                                 <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition-all shadow-sm"></div>
@@ -59,16 +59,16 @@ export const Settings: React.FC = () => {
                     </div>
                 </section>
 
-                <section className="bg-slate-900/50 border border-white/5 p-8 rounded-2xl md:col-span-2">
-                    <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                        <i className="fas fa-server text-indigo-400"></i> System Status
+                <section className="bg-white border border-slate-100 p-8 rounded-2xl md:col-span-2 shadow-sm">
+                    <h2 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                        <i className="fas fa-server text-indigo-600"></i> Status do Sistema
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {['Database', 'Storage', 'Auth Service'].map((service, i) => (
-                            <div key={i} className="flex items-center gap-3 p-4 bg-slate-950 rounded-xl border border-white/5">
+                        {['Banco de Dados', 'Armazenamento', 'Serviço de Auth'].map((service, i) => (
+                            <div key={i} className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
                                 <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(52,211,153,0.5)] animate-pulse"></div>
-                                <span className="text-sm font-bold text-white">{service}</span>
-                                <span className="ml-auto text-xs text-emerald-400 font-mono">OPERATIONAL</span>
+                                <span className="text-sm font-bold text-slate-800">{service}</span>
+                                <span className="ml-auto text-xs text-emerald-600 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded">OPERACIONAL</span>
                             </div>
                         ))}
                     </div>
