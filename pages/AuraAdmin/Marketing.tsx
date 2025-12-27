@@ -96,6 +96,13 @@ const MarketingDashboard = ({ totalContacts, loading }: { totalContacts: number;
 const CampaignsList = () => {
     const [campaigns, setCampaigns] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [campaignForm, setCampaignForm] = useState({
+        name: '',
+        subject: '',
+        content: '',
+        sendTo: 'all'
+    });
 
     useEffect(() => {
         fetchCampaigns();
@@ -113,6 +120,24 @@ const CampaignsList = () => {
         }
     };
 
+    const handleCreateCampaign = async () => {
+        try {
+            if (!campaignForm.name || !campaignForm.subject) {
+                alert('Por favor, preencha o nome e o assunto da campanha.');
+                return;
+            }
+
+            // For now, just close the modal and show success
+            // TODO: Create campaigns table and insert data
+            alert('Funcionalidade em desenvolvimento! Em breve você poderá criar campanhas de email.');
+            setShowModal(false);
+            setCampaignForm({ name: '', subject: '', content: '', sendTo: 'all' });
+        } catch (error) {
+            console.error('Error creating campaign:', error);
+            alert('Erro ao criar campanha');
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center p-12">
@@ -125,10 +150,83 @@ const CampaignsList = () => {
         <div className="space-y-4">
             <div className="flex justify-between items-center">
                 <h3 className="text-lg font-bold text-slate-800">Campanhas Recentes</h3>
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center gap-2">
+                <button
+                    onClick={() => setShowModal(true)}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center gap-2">
                     <i className="fas fa-plus"></i> Nova Campanha
                 </button>
             </div>
+
+            {/* Campaign Creation Modal */}
+            {showModal && (
+                <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+                        <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10">
+                            <h3 className="text-xl font-black text-slate-800">Nova Campanha de Email</h3>
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
+                                <i className="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div className="p-6 space-y-6">
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Nome da Campanha</label>
+                                <input
+                                    type="text"
+                                    value={campaignForm.name}
+                                    onChange={(e) => setCampaignForm({ ...campaignForm, name: e.target.value })}
+                                    placeholder="Ex: Newsletter de Janeiro"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Assunto do Email</label>
+                                <input
+                                    type="text"
+                                    value={campaignForm.subject}
+                                    onChange={(e) => setCampaignForm({ ...campaignForm, subject: e.target.value })}
+                                    placeholder="Ex: Novidades e Promoções de Janeiro"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Conteúdo</label>
+                                <textarea
+                                    value={campaignForm.content}
+                                    onChange={(e) => setCampaignForm({ ...campaignForm, content: e.target.value })}
+                                    placeholder="Digite o conteúdo do email..."
+                                    rows={6}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 resize-none"
+                                ></textarea>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Enviar Para</label>
+                                <select
+                                    value={campaignForm.sendTo}
+                                    onChange={(e) => setCampaignForm({ ...campaignForm, sendTo: e.target.value })}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20">
+                                    <option value="all">Todos os Contatos</option>
+                                    <option value="owners">Apenas Proprietários</option>
+                                    <option value="staff">Apenas Funcionários</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 sticky bottom-0 bg-white">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="px-6 py-3 rounded-xl font-bold text-slate-600 hover:bg-slate-100 transition-all">
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleCreateCampaign}
+                                className="px-6 py-3 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                                Criar Campanha
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {campaigns.length === 0 ? (
                 <div className="bg-white border border-slate-100 rounded-2xl p-12 text-center shadow-sm">

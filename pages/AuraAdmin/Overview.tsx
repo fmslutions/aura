@@ -95,29 +95,105 @@ export const Overview: React.FC = () => {
                 {/* Recent Activity */}
                 <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
                     <h3 className="font-bold text-lg mb-6 text-slate-800">Atividade Recente</h3>
-                    <div className="space-y-4">
-                        {[
-                            { action: 'Novo Salão Registrado', subject: 'Luxe Hair Studio', time: '2m atrás', icon: 'fa-plus', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-                            { action: 'Plano Atualizado', subject: 'Barber Bros', time: '1h atrás', icon: 'fa-arrow-up', color: 'text-indigo-600', bg: 'bg-indigo-50' },
-                            { action: 'Ticket de Suporte', subject: 'Nail Artistry', time: '3h atrás', icon: 'fa-envelope', color: 'text-amber-600', bg: 'bg-amber-50' },
-                        ].map((item, i) => (
-                            <div key={i} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group">
-                                <div className={`mt-1 p-2 rounded-lg ${item.bg} ${item.color} group-hover:scale-110 transition-transform`}>
-                                    <i className={`fas ${item.icon} text-xs`}></i>
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{item.action}</p>
-                                    <p className="text-xs text-slate-500 truncate">{item.subject}</p>
-                                </div>
-                                <span className="text-[10px] font-mono text-slate-400 font-bold">{item.time}</span>
-                            </div>
-                        ))}
-                    </div>
-                    <button className="w-full mt-6 py-3 border border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 hover:border-indigo-100 transition-all">
-                        Ver Todos os Logs
-                    </button>
+                    <RecentActivityList />
                 </div>
             </div>
         </div>
+    );
+};
+
+// Recent Activity Component
+const RecentActivityList = () => {
+    const [activities, setActivities] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchRecentActivity();
+    }, []);
+
+    const fetchRecentActivity = async () => {
+        try {
+            setLoading(true);
+
+            // Fetch recent tenants as activity logs
+            const { data: recentTenants, error } = await supabase
+                .from('tenants')
+                .select('name, created_at, status')
+                .order('created_at', { ascending: false })
+                .limit(5);
+
+            if (error) throw error;
+
+            const formattedActivities = (recentTenants || []).map((tenant: any) => ({
+                action: 'Novo Salão Registrado',
+                subject: tenant.name,
+                time: getRelativeTime(tenant.created_at),
+                icon: 'fa-plus',
+                color: 'text-emerald-600',
+                bg: 'bg-emerald-50'
+            }));
+
+            setActivities(formattedActivities);
+        } catch (error) {
+            console.error('Error fetching activity:', error);
+            setActivities([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getRelativeTime = (timestamp: string) => {
+        const now = new Date();
+        const past = new Date(timestamp);
+        const diffMs = now.getTime() - past.getTime();
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return 'Agora';
+        if (diffMins < 60) return `${diffMins}m atrás`;
+        if (diffHours < 24) return `${diffHours}h atrás`;
+        return `${diffDays}d atrás`;
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center p-8">
+                <i className="fas fa-circle-notch animate-spin text-2xl text-indigo-500"></i>
+            </div>
+        );
+    }
+
+    if (activities.length === 0) {
+        return (
+            <div className="text-center p-8">
+                <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400">
+                    <i className="fas fa-history"></i>
+                </div>
+                <p className="text-sm text-slate-500">Nenhuma atividade recente</p>
+            </div>
+        );
+    }
+
+    return (
+        <>
+            <div className="space-y-4">
+                {activities.map((item, i) => (
+                    <div key={i} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group">
+                        <div className={`mt-1 p-2 rounded-lg ${item.bg} ${item.color} group-hover:scale-110 transition-transform`}>
+                            <i className={`fas ${item.icon} text-xs`}></i>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{item.action}</p>
+                            <p className="text-xs text-slate-500 truncate">{item.subject}</p>
+                        </div>
+                        <span className="text-[10px] font-mono text-slate-400 font-bold">{item.time}</span>
+                    </div>
+                ))}
+            </div>
+            <button className="w-full mt-6 py-3 border border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 hover:border-indigo-100 transition-all">
+                Ver Todos os Logs
+            </button>
+        </>
     );
 };
