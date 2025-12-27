@@ -3,14 +3,16 @@ export enum AppView {
   INSTITUTIONAL = 'INSTITUTIONAL',
   DASHBOARD = 'DASHBOARD',
   PWA = 'PWA',
-  AUTH = 'AUTH'
+  AUTH = 'AUTH',
+  AURA_ADMIN = 'AURA_ADMIN'
 }
 
 export enum UserRole {
   ADMIN = 'ADMIN',
   SALON_OWNER = 'SALON_OWNER',
   STAFF = 'STAFF',
-  CLIENT = 'CLIENT'
+  CLIENT = 'CLIENT',
+  SUPER_ADMIN = 'SUPER_ADMIN'
 }
 
 export interface Tenant {

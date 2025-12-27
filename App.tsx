@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AppView, Tenant, Service, Staff } from './types';
 import { Navigation } from './components/Navigation';
 import { Dashboard } from './Dashboard';
+import { AuraAdmin } from './pages/AuraAdmin';
 import { GeminiService } from './services/geminiService';
 import { useAuth } from './src/hooks/useAuth';
 import { supabase } from './src/lib/supabase';
@@ -448,7 +449,7 @@ const LazyServiceCard: React.FC<{ service: Service, t: Record<string, string>, o
 };
 
 const App: React.FC = () => {
-  const { user, tenant, loading: authLoading } = useAuth();
+  const { user, tenant, role, isSuperAdmin, loading: authLoading, switchTenant } = useAuth();
   const [view, setView] = useState<AppView>(AppView.INSTITUTIONAL);
 
   // PWA State
@@ -480,13 +481,17 @@ const App: React.FC = () => {
   // Update view based on auth state
   useEffect(() => {
     if (!authLoading) {
-      if (user && tenant) {
-        setView(AppView.DASHBOARD);
-      } else if (view === AppView.DASHBOARD) {
+      if (user) {
+        if (isSuperAdmin && !tenant) {
+          setView(AppView.AURA_ADMIN);
+        } else if (tenant) {
+          setView(AppView.DASHBOARD);
+        }
+      } else if (view === AppView.DASHBOARD || view === AppView.AURA_ADMIN) {
         setView(AppView.AUTH);
       }
     }
-  }, [user, tenant, authLoading]);
+  }, [user, tenant, isSuperAdmin, authLoading]);
 
   // Use tenant from Auth or fallback to Mock (only for landing page visualization if needed)
   const activeTenant = tenant || MOCK_TENANT;
@@ -1239,6 +1244,13 @@ const App: React.FC = () => {
         />
       )}
       {view === AppView.PWA && renderPWA()}
+      {view === AppView.AURA_ADMIN && (
+        <AuraAdmin
+          onSwitchTenant={switchTenant}
+          activeTenantId={tenant?.id}
+          onLogout={() => supabase.auth.signOut()}
+        />
+      )}
     </div>
   );
 };
