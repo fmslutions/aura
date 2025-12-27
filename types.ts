@@ -19,17 +19,17 @@ export interface Tenant {
   id: string;
   name: string;
   slug: string;
-  logo?: string;
-  primaryColor: string;
-  secondaryColor: string;
-  description: string;
-  address: string;
-  geolocation?: { lat: number; lng: number };
+  description?: string;
+  address?: string;
   languages: string[];
   timezone: string;
   currency: string;
-  stripeConnected: boolean;
-  status: 'ACTIVE' | 'PENDING' | 'SUSPENDED';
+  primaryColor?: string;
+  secondaryColor?: string;
+  status?: string;
+  stripeConnected?: boolean;
+  plan?: string; // FREE, BASIC, PRO, ENTERPRISE
+  modules?: string[]; // Array of module names (e.g., ['marketing', 'gift_cards'])
 }
 
 export interface Service {

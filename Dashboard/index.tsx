@@ -6,6 +6,8 @@ import { Bookings } from './Bookings';
 import { ClientsPage } from './Clients';
 import { StaffPage } from './Staff';
 import { ServicesPage } from './Services';
+import { Courses } from './Courses';
+import { GiftCards } from './GiftCards';
 import { Growth } from './Growth';
 import { Payments } from './Payments';
 import { Settings } from './Settings';
@@ -44,12 +46,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     const renderContent = () => {
         switch (activeTab) {
             case 'home':
-                return <Home
-                    activeTenant={activeTenant}
-                    auraLogo={auraLogo}
-                    handleGenerateLogo={handleGenerateLogo}
-                    isGeneratingLogo={isGeneratingLogo}
-                />;
+                return <Home activeTenant={activeTenant} />;
             case 'bookings':
                 return <Bookings />;
             case 'clients':
@@ -58,6 +55,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 return <StaffPage />;
             case 'services':
                 return <ServicesPage />;
+            case 'courses':
+                return <Courses />;
+            case 'gift-cards':
+                return <GiftCards />;
             case 'growth':
                 return <Growth />;
             case 'payments':
@@ -67,12 +68,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             case 'profile':
                 return <ProfilePage />;
             default:
-                return <Home
-                    activeTenant={activeTenant}
-                    auraLogo={auraLogo}
-                    handleGenerateLogo={handleGenerateLogo}
-                    isGeneratingLogo={isGeneratingLogo}
-                />;
+                return <Home activeTenant={activeTenant} />;
         }
     };
 
